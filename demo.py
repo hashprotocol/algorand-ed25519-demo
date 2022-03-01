@@ -35,9 +35,9 @@ if __name__ == '__main__':
     funder = get_genesis_accounts()[0]
     
     hp = Account.from_mnemonic("manage erode connect disagree scene auction close oil assume yard ride rapid brush assume gossip match find south deposit snake access endless stove absent ski")
-    data = "test"
+    data = "CONTEXT STRING" + "this is a test"
     program = get_escrow_program(client, data)
-    signature = teal_sign_from_program(hp.get_private_key(), data.encode('utf-8'), program)
+    signature = b"e070fb9bd87601cbcb08220d8f63bc022ae003363c7165f3cda4c39b281dcabbf36e7bd83534310ddd40516c0de95de2aab3c2880f675d73e9d79e9d12b2ec02"
     lsig = transaction.LogicSigAccount(
         program,
         args=[signature]

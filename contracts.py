@@ -9,7 +9,7 @@ def escrow(
     data=tmpl_data
 ):
     return Seq(
-        Assert(Ed25519Verify(data, Arg(0), Addr("BJRLVGSFC4IDXEB2B3GJ62QRJAHDDZW7JBWLSUFQ2DUD3IRNC4DHX6XELM"))),
+        Assert(Ed25519Verify(data, Arg(0), Bytes("c586a4d71217c461338a678c5b50b820c4804866d99b783c25605ffa814dde50"))),
         Approve()
     )
 
