@@ -3,9 +3,8 @@ import os
 import dotenv
 from algosdk.v2client.algod import AlgodClient
 from algosdk.future import transaction
-from algosdk import account
-from algosdk.logic import teal_sign_from_program
-from pyteal import compileTeal, Mode, Bytes
+from algosdk import encoding
+from pyteal import compileTeal, Mode, Bytes, Addr
 from account import Account
 
 from contracts import escrow
@@ -13,11 +12,11 @@ from sandbox import get_genesis_accounts
 from utils import fully_compile_contract, get_algod_client, wait_for_transaction
 
 
-def get_escrow_program(client: AlgodClient, data: str):
+def get_escrow_program(client: AlgodClient, data: str, group_key: str):
     return fully_compile_contract(
         client,
         compileTeal(
-            escrow(Bytes(data)),
+            escrow(Bytes(data), Addr(group_key)),
             mode=Mode.Signature,
             assembleConstants=True,
             version=5
@@ -35,9 +34,10 @@ if __name__ == '__main__':
     funder = get_genesis_accounts()[0]
     
     hp = Account.from_mnemonic("manage erode connect disagree scene auction close oil assume yard ride rapid brush assume gossip match find south deposit snake access endless stove absent ski")
+    group_key = encoding.encode_address(bytes.fromhex("c586a4d71217c461338a678c5b50b820c4804866d99b783c25605ffa814dde50"))
     data = "CONTEXT STRING" + "this is a test"
-    program = get_escrow_program(client, data)
-    signature = b"e070fb9bd87601cbcb08220d8f63bc022ae003363c7165f3cda4c39b281dcabbf36e7bd83534310ddd40516c0de95de2aab3c2880f675d73e9d79e9d12b2ec02"
+    program = get_escrow_program(client, data, group_key)
+    signature = bytes.fromhex("e070fb9bd87601cbcb08220d8f63bc022ae003363c7165f3cda4c39b281dcabbf36e7bd83534310ddd40516c0de95de2aab3c2880f675d73e9d79e9d12b2ec02")
     lsig = transaction.LogicSigAccount(
         program,
         args=[signature]

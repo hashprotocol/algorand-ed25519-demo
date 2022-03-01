@@ -1,15 +1,16 @@
 from pyteal import *
 
 
-tmpl_group_key = Tmpl.Bytes("TMPL_GRP_KEY")
+tmpl_group_key = Tmpl.Addr("TMPL_GRP_KEY")
 tmpl_data = Tmpl.Bytes("TMPL_DATA")
 
 
 def escrow(
-    data=tmpl_data
+    data=tmpl_data,
+    group_key=tmpl_group_key
 ):
     return Seq(
-        Assert(Ed25519Verify(data, Arg(0), Bytes("c586a4d71217c461338a678c5b50b820c4804866d99b783c25605ffa814dde50"))),
+        Assert(Ed25519Verify(data, Arg(0), group_key)),
         Approve()
     )
 
